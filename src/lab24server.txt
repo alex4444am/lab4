@@ -1,0 +1,30 @@
+const express = require("express");
+
+const app = express();
+const PORT = 3000;
+
+app.use(express.json());
+
+const movies = ["Титанік", "Дивергент", "Геншин", "Месники", "Пірати"];
+
+app.get("/", (req, res) => {
+    res.send("Сервер працює! Використовуйте /api/movie або /api/compare");
+});
+
+app.get("/api/movie", (req, res) => {
+    const randomMovie = movies[Math.floor(Math.random() * movies.length)];
+    res.json({ movie: randomMovie });
+});
+
+app.post("/api/compare", (req, res) => {
+    const { num1, num2 } = req.body;
+    if (typeof num1 !== "number" || typeof num2 !== "number") {
+        return res.status(400).json({ error: "Будь ласка, надайте два числа." });
+    }
+    const greater = num1 > num2 ? num1 : num2;
+    res.json({ greater });
+});
+
+app.listen(PORT, () => {
+    console.log(`Сервер запущено на http://localhost:${PORT}`);
+});

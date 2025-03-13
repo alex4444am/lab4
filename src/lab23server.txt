@@ -1,0 +1,32 @@
+const express = require("express");
+const path = require("path");
+
+const app = express();
+const PORT = 3000;
+
+const orders = [];
+
+app.use(express.json()); 
+app.use(express.static(path.join(__dirname, "public"))); 
+
+app.post("/api/orders", (req, res) => {
+    const { customerName, orderDetails } = req.body;
+
+    if (!customerName || !orderDetails) {
+        return res.status(400).json({ message: "Будь ласка, заповніть всі поля!" });
+    }
+
+    const newOrder = {
+        id: orders.length + 1,
+        customerName,
+        orderDetails,
+        createdAt: new Date(),
+    };
+
+    orders.push(newOrder);
+    res.status(201).json({ message: "Замовлення успішно додано!", order: newOrder });
+});
+
+app.listen(PORT, () => {
+    console.log(`Сервер запущено на http://localhost:${PORT}`);
+});
